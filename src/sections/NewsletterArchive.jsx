@@ -199,7 +199,9 @@ export default function NewsletterArchive() {
               </div>
               
               <a 
-                href="#signup"
+                href="https://westernstar.beehiiv.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
               >
                 <Mail className="w-5 h-5" />

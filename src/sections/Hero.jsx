@@ -64,7 +64,9 @@ export default function Hero() {
             mounted ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>
             <a
-              href="#signup"
+              href="https://westernstar.beehiiv.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group relative inline-flex items-center gap-4 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-coral px-12 py-6 text-lg font-bold text-white shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-brand-teal to-brand-orange opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

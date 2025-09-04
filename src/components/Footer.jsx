@@ -68,11 +68,12 @@ export default function Footer() {
                 { href: "#preview", label: "Latest News" },
                 { href: "#topics", label: "Topics" },
                 { href: "#archive", label: "Newsletter Archive" },
-                { href: "#signup", label: "Subscribe" }
+                { href: "https://westernstar.beehiiv.com/", label: "Subscribe", external: true }
               ].map((link, index) => (
                 <li key={link.href}>
                   <a 
                     href={link.href} 
+                    {...(link.external && { target: "_blank", rel: "noopener noreferrer" })}
                     className="text-brand-gray hover:text-brand-teal transition-all duration-300 font-medium hover:translate-x-2 inline-block group"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >

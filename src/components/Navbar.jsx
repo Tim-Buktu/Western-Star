@@ -103,7 +103,9 @@ export default function Navbar() {
 
             {/* Subscribe */}
             <a
-              href="#signup"
+              href="https://westernstar.beehiiv.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-orange to-brand-coral px-6 py-2.5 text-sm font-semibold text-white hover:from-brand-teal hover:to-brand-orange hover:shadow-lg transform hover:scale-105 transition-all duration-300 group"
             >
               <Mail className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" /> 
@@ -231,7 +233,9 @@ export default function Navbar() {
               </a>
             ))}
             <a 
-              href="#signup" 
+              href="https://westernstar.beehiiv.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-3 px-4 py-4 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-brand-orange to-brand-coral hover:from-brand-teal hover:to-brand-orange transition-all duration-300 transform hover:scale-105 group"
               onClick={() => setMobileOpen(false)}
             >
