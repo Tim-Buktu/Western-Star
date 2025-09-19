@@ -8,13 +8,23 @@ export default function Testimonials() {
   const scrollRef = useRef(null)
 
   useEffect(() => {
-    // Initial load
-    setTestimonialsData(getCMSData('testimonials'))
+    // Load testimonials data async
+    const loadTestimonials = async () => {
+      try {
+        const data = await getCMSData('testimonials')
+        setTestimonialsData(data || { items: [] })
+      } catch (error) {
+        console.error('Error loading testimonials:', error)
+        setTestimonialsData({ items: [] })
+      }
+    }
+    
+    loadTestimonials()
 
     // Listen for CMS updates
     const handleCMSUpdate = (event) => {
       if (event.detail.section === 'testimonials') {
-        setTestimonialsData(getCMSData('testimonials'))
+        loadTestimonials()
       }
     }
 

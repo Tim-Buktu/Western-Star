@@ -1,0 +1,61 @@
+⚠️  Rate limiting is disabled in development mode
+🚀 Server running on http://localhost:3001
+📊 Environment: development
+🌐 Frontend URL: http://localhost:5173
+prisma:info Starting a postgresql pool with 17 connections.
+prisma:query SELECT "public"."Hero"."id", "public"."Hero"."badgeText", "public"."Hero"."badgeActive", "public"."Hero"."title", "public"."Hero"."subtitle", "public"."Hero"."createdAt", "public"."Hero"."updatedAt" FROM "public"."Hero" WHERE 1=1 LIMIT $1 OFFSET $2
+[0mGET /api/hero [32m200[0m 286.492 ms - 230[0m
+prisma:query SELECT 1
+prisma:query SELECT "public"."Hero"."id", "public"."Hero"."badgeText", "public"."Hero"."badgeActive", "public"."Hero"."title", "public"."Hero"."subtitle", "public"."Hero"."createdAt", "public"."Hero"."updatedAt" FROM "public"."Hero" WHERE 1=1 LIMIT $1 OFFSET $2
+prisma:query UPDATE "public"."Hero" SET "title" = $1, "updatedAt" = $2 WHERE ("public"."Hero"."id" = $3 AND 1=1) RETURNING "public"."Hero"."id", "public"."Hero"."badgeText", "public"."Hero"."badgeActive", "public"."Hero"."title", "public"."Hero"."subtitle", "public"."Hero"."createdAt", "public"."Hero"."updatedAt"
+[0mPUT /api/hero [32m200[0m 43.259 ms - 266[0m
+prisma:query SELECT 1
+prisma:query SELECT "public"."testimonials"."id", "public"."testimonials"."name", "public"."testimonials"."title", "public"."testimonials"."text", "public"."testimonials"."isActive", "public"."testimonials"."position", "public"."testimonials"."createdAt", "public"."testimonials"."updatedAt" FROM "public"."testimonials" WHERE 1=1 ORDER BY "public"."testimonials"."position" DESC LIMIT $1 OFFSET $2
+prisma:query INSERT INTO "public"."testimonials" ("name","title","text","isActive","position","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."testimonials"."id", "public"."testimonials"."name", "public"."testimonials"."title", "public"."testimonials"."text", "public"."testimonials"."isActive", "public"."testimonials"."position", "public"."testimonials"."createdAt", "public"."testimonials"."updatedAt"
+[0mPOST /api/testimonials [32m201[0m 34.826 ms - 225[0m
+prisma:query SELECT "public"."topics"."id", "public"."topics"."icon", "public"."topics"."title", "public"."topics"."description", "public"."topics"."isActive", "public"."topics"."position", "public"."topics"."createdAt", "public"."topics"."updatedAt" FROM "public"."topics" WHERE 1=1 ORDER BY "public"."topics"."position" DESC LIMIT $1 OFFSET $2
+prisma:query INSERT INTO "public"."topics" ("icon","title","description","isActive","position","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING "public"."topics"."id", "public"."topics"."icon", "public"."topics"."title", "public"."topics"."description", "public"."topics"."isActive", "public"."topics"."position", "public"."topics"."createdAt", "public"."topics"."updatedAt"
+[0mPOST /api/topics [32m201[0m 12.792 ms - 212[0m
+prisma:query SELECT 1
+prisma:query SELECT "public"."trending_topics"."id", "public"."trending_topics"."category", "public"."trending_topics"."title", "public"."trending_topics"."summary", "public"."trending_topics"."date", "public"."trending_topics"."image", "public"."trending_topics"."position", "public"."trending_topics"."isVisible", "public"."trending_topics"."createdAt", "public"."trending_topics"."updatedAt" FROM "public"."trending_topics" WHERE 1=1 ORDER BY "public"."trending_topics"."position" DESC LIMIT $1 OFFSET $2
+prisma:error 
+Invalid `prisma.trendingTopic.create()` invocation:
+
+{
+  data: {
+    category: "Tech",
+    title: "AI Revolution",
+    summary: "How AI is transforming industries",
+    date: new Date("2024-01-15T00:00:00.000Z"),
+    isVisible: true,
+    position: 1,
++   image: String
+  }
+}
+
+Argument `image` must not be null.
+Error creating trending topic: PrismaClientValidationError: 
+Invalid `prisma.trendingTopic.create()` invocation:
+
+{
+  data: {
+    category: "Tech",
+    title: "AI Revolution",
+    summary: "How AI is transforming industries",
+    date: new Date("2024-01-15T00:00:00.000Z"),
+    isVisible: true,
+    position: 1,
++   image: String
+  }
+}
+
+Argument `image` must not be null.
+    at wn (/Users/timothys/Downloads/western-star-landing/backend/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at $n.handleRequestError (/Users/timothys/Downloads/western-star-landing/backend/node_modules/@prisma/client/runtime/library.js:121:6958)
+    at $n.handleAndLogRequestError (/Users/timothys/Downloads/western-star-landing/backend/node_modules/@prisma/client/runtime/library.js:121:6623)
+    at $n.request (/Users/timothys/Downloads/western-star-landing/backend/node_modules/@prisma/client/runtime/library.js:121:6307)
+    at async l (/Users/timothys/Downloads/western-star-landing/backend/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async file:///Users/timothys/Downloads/western-star-landing/backend/routes/trending-topics.js:62:27 {
+  clientVersion: '5.22.0'
+}
+[0mPOST /api/trending-topics [31m500[0m 14.443 ms - 43[0m

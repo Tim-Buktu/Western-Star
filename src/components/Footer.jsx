@@ -1,11 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Mail, Twitter, Linkedin, Rss, Heart, Zap } from 'lucide-react'
 import logo from '../assets/logo.png'
 import { getCMSData } from '../utils/cms'
 
 export default function Footer() {
-  const siteData = getCMSData('site')
-  const footerData = getCMSData('footer')
+  const [siteData, setSiteData] = useState({})
+  const [footerData, setFooterData] = useState({})
+
+  useEffect(() => {
+    let cancelled = false
+    const load = async () => {
+      try {
+        const [site, footer] = await Promise.all([
+          getCMSData('site'),
+          getCMSData('footer'),
+        ])
+        if (!cancelled) {
+          setSiteData(site || {})
+          setFooterData(footer || {})
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setSiteData({})
+          setFooterData({})
+        }
+        console.error('Failed to load footer data:', e)
+      }
+    }
+    load()
+    return () => { cancelled = true }
+  }, [])
   
   return (
     <footer className="bg-brand-navy border-t border-brand-teal/20 relative overflow-hidden">

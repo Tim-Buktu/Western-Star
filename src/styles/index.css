@@ -46,3 +46,293 @@ a { @apply underline-offset-2; }
 .snap-center {
   scroll-snap-align: center;
 }
+
+/* Custom animations for newsroom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slideInFromLeft {
+  animation: slideInFromLeft 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slideInFromRight {
+  animation: slideInFromRight 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0px,
+    #f8f8f8 40px,
+    #f0f0f0 80px
+  );
+  background-size: 200px;
+}
+
+.animate-gentle-float {
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+/* Enhanced hover effects */
+.group:hover .group-hover\:animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Apple-style sophisticated transitions */
+.apple-card-transition {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card-hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Staggered animation delays for layout groups */
+.layout-group-1 { animation-delay: 0ms; }
+.layout-group-2 { animation-delay: 150ms; }
+.layout-group-3 { animation-delay: 300ms; }
+.layout-group-4 { animation-delay: 450ms; }
+.layout-group-5 { animation-delay: 600ms; }
+
+/* Improved grid spacing for Apple-style layouts */
+.apple-mosaic-grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Enhanced image aspect ratios for consistent layouts */
+.aspect-golden {
+  aspect-ratio: 1.618 / 1;
+}
+
+.aspect-video-wide {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-photo {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Glass morphism effect */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #2AB7CA 0%, #FB8550 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom scrollbar for better UX */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #2AB7CA;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #1E9BAA;
+}
+
+/* Enhanced prose styling for article content */
+.prose {
+  @apply text-gray-900 leading-relaxed;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold text-gray-900 mt-8 mb-4 leading-tight;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold text-gray-900 mt-6 mb-3 leading-tight;
+}
+
+.prose h4 {
+  @apply text-lg font-semibold text-gray-900 mt-4 mb-2;
+}
+
+.prose p {
+  @apply mb-4 text-gray-700 leading-relaxed;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-brand-teal bg-gray-50 p-6 my-6 italic text-gray-700 rounded-r-lg;
+}
+
+.prose blockquote p {
+  @apply mb-2;
+}
+
+.prose blockquote footer {
+  @apply text-sm text-gray-600 not-italic font-medium;
+}
+
+.prose ul {
+  @apply list-disc ml-6 mb-4 space-y-2;
+}
+
+.prose ol {
+  @apply list-decimal ml-6 mb-4 space-y-2;
+}
+
+.prose li {
+  @apply text-gray-700;
+}
+
+.prose a {
+  @apply text-brand-teal hover:text-brand-navy transition-colors underline;
+}
+
+.prose strong {
+  @apply font-semibold text-gray-900;
+}
+
+.prose em {
+  @apply italic;
+}
+
+.prose code {
+  @apply bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm;
+}
+
+.prose img {
+  @apply rounded-lg my-6 shadow-sm;
+}
+
+.prose table {
+  @apply w-full border-collapse mb-6;
+}
+
+.prose th {
+  @apply border-b-2 border-gray-300 pb-2 text-left font-semibold text-gray-900;
+}
+
+.prose td {
+  @apply border-b border-gray-200 py-2 text-gray-700;
+}
+
+/* Responsive prose adjustments */
+@media (max-width: 768px) {
+  .prose h2 {
+    @apply text-xl mt-6 mb-3;
+  }
+  
+  .prose h3 {
+    @apply text-lg mt-4 mb-2;
+  }
+  
+  .prose blockquote {
+    @apply p-4 my-4;
+  }
+}

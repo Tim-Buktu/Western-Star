@@ -1,0 +1,132 @@
+{
+  "newsArticleTemplate": {
+    "id": null,
+    "type": "feature-story",
+    "category": "TECHNOLOGY",
+    "title": "Article Title Here",
+    "summary": "Brief article summary that appears in listings and previews. Should be compelling and informative.",
+    "content": "<h2>Section Header</h2><p>Article content goes here. Use HTML formatting for rich content including headings, paragraphs, lists, blockquotes, and more.</p><h3>Subsection</h3><p>More content...</p>",
+    "insights": [
+      "Key insight bullet point 1",
+      "Key insight bullet point 2",
+      "Key insight bullet point 3"
+    ],
+    "author": {
+      "name": "Author Name",
+      "role": "Author Role/Title",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop"
+    },
+    "date": "2025-01-15",
+    "lastUpdated": "2025-01-15",
+    "tags": ["TECHNOLOGY", "INNOVATION", "POLICY & REGULATIONS"],
+    "image": {
+      "url": "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop",
+      "alt": "Descriptive alt text for the image"
+    },
+    "views": 15420,
+    "resources": [
+      {
+        "type": "report",
+        "title": "Resource Title",
+        "description": "Brief description of the resource",
+        "url": "#"
+      },
+      {
+        "type": "video",
+        "title": "Video Title",
+        "description": "Brief description of the video",
+        "url": "#"
+      }
+    ]
+  },
+  "articleTypes": {
+    "feature-story": "Main hero story with large image and comprehensive content",
+    "breaking-news": "Urgent news with alert styling and emphasis",
+    "data-story": "Data-driven article with charts and statistics",
+    "lifestyle-feature": "People and culture focused content",
+    "innovation-spotlight": "Technology and product showcases",
+    "profile-interview": "People-focused content with quotes and interviews",
+    "cultural-analysis": "Deep-dive cultural and social commentary",
+    "financial-deep-dive": "Finance and investment focused analysis",
+    "international-analysis": "Geopolitical and diplomatic coverage",
+    "corporate-strategy": "Business strategy and corporate analysis"
+  },
+  "availableCategories": [
+    "TECHNOLOGY",
+    "GLOBAL ECONOMY", 
+    "POLICY & REGULATIONS",
+    "INTERNATIONAL RELATIONS",
+    "CORPORATE",
+    "INNOVATION",
+    "LIFESTYLE",
+    "CULTURAL",
+    "FINANCIAL",
+    "CAREER"
+  ],
+  "imageGuidelines": {
+    "heroImages": {
+      "size": "1200x600 pixels minimum",
+      "ratio": "2:1 or 16:9",
+      "format": "JPG or PNG",
+      "description": "High-quality images for featured articles and headers"
+    },
+    "thumbnails": {
+      "size": "400x300 pixels minimum", 
+      "ratio": "4:3",
+      "format": "JPG or PNG",
+      "description": "Smaller images for article previews and cards"
+    },
+    "authorAvatars": {
+      "size": "150x150 pixels",
+      "ratio": "1:1 (square)",
+      "format": "JPG or PNG",
+      "description": "Profile photos for article authors"
+    }
+  },
+  "contentGuidelines": {
+    "title": {
+      "maxLength": 120,
+      "description": "Compelling headline that captures the essence of the article"
+    },
+    "summary": {
+      "maxLength": 300,
+      "description": "Brief description that appears in listings and social sharing"
+    },
+    "content": {
+      "format": "HTML",
+      "description": "Main article content with proper HTML formatting"
+    },
+    "insights": {
+      "maxItems": 5,
+      "description": "Key takeaways or bullet points that summarize important findings"
+    }
+  },
+  "layoutTypes": {
+    "mosaic": {
+      "description": "Apple-inspired varied grid layout with different sized cards",
+      "features": ["Featured hero article", "Mixed card sizes", "Dynamic positioning"]
+    },
+    "grid": {
+      "description": "Standard uniform grid of article cards",
+      "features": ["Equal-sized cards", "Consistent spacing", "Easy scanning"]
+    },
+    "list": {
+      "description": "Horizontal list layout with images and detailed previews", 
+      "features": ["Detailed previews", "Horizontal layout", "More text content"]
+    }
+  },
+  "sampleContent": {
+    "technologyArticle": {
+      "title": "The AI Revolution: Transforming Southeast Asian Business",
+      "summary": "Exploring how artificial intelligence is driving innovation and economic growth across the region's key markets.",
+      "tags": ["TECHNOLOGY", "INNOVATION", "GLOBAL ECONOMY"],
+      "category": "TECHNOLOGY"
+    },
+    "policyArticle": {
+      "title": "New Digital Tax Framework Reshapes Tech Landscape", 
+      "summary": "Government announces comprehensive digital taxation policies affecting international technology companies.",
+      "tags": ["POLICY & REGULATIONS", "TECHNOLOGY", "FINANCIAL"],
+      "category": "POLICY & REGULATIONS"
+    }
+  }
+}

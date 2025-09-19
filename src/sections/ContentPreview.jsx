@@ -1,12 +1,56 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Clock, ArrowUpRight, Flame, TrendingUp, Eye, Share2, Bookmark } from 'lucide-react'
 import { getCMSData, getAvailableTags } from '../utils/cms'
 
 export default function ContentPreview() {
   const [selectedCategory, setSelectedCategory] = useState('ALL')
-  const trendingData = getCMSData('trendingTopics')
-  const headlineList = trendingData?.items || []
-  const availableTags = getAvailableTags()
+  const [headlineList, setHeadlineList] = useState([])
+  const [availableTags, setAvailableTags] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    const load = async () => {
+      try {
+        const [trending, tags] = await Promise.all([
+          getCMSData('trendingTopics'),
+          getAvailableTags(),
+        ])
+        if (cancelled) return
+        // trending may be an array; normalize to list
+        const rawItems = Array.isArray(trending?.items) ? trending.items : Array.isArray(trending) ? trending : []
+        const items = rawItems.map(it => ({
+          ...it,
+          // Normalize fields possibly coming from backend aggregate
+          tags: Array.isArray(it.tags) ? it.tags : [],
+          image: it.image?.url || it.image || '',
+        }))
+        setHeadlineList(items)
+        setAvailableTags(Array.isArray(tags) ? tags : [])
+      } catch (e) {
+        if (!cancelled) {
+          console.error('Failed to load content preview data:', e)
+          setHeadlineList([])
+          setAvailableTags([])
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+    load()
+    return () => { cancelled = true }
+  }, [])
+
+  if (loading) {
+    return (
+      <section className="bg-red-600 text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-20 text-center">
+          <h2 className="text-3xl font-bold mb-8">Latest News</h2>
+          <p className="text-red-100">Loading…</p>
+        </div>
+      </section>
+    )
+  }
 
   if (headlineList.length === 0) {
     return (
@@ -21,9 +65,9 @@ export default function ContentPreview() {
 
   // Get categories from available tags only
   const getCategories = () => {
-    const tagCategories = availableTags
-      .filter(tag => tag.active)
-      .map(tag => tag.value)
+    const tagCategories = (availableTags || [])
+      .filter(tag => tag.active || tag.isActive)
+      .map(tag => tag.value || tag.name)
     
     return ['ALL', ...tagCategories]
   }
@@ -37,7 +81,7 @@ export default function ContentPreview() {
         // Check tags field
         if (item.tags && Array.isArray(item.tags)) {
           return item.tags.some(tag => {
-            const tagValue = typeof tag === 'string' ? tag : tag.value
+            const tagValue = typeof tag === 'string' ? tag : (tag.value || tag.name)
             return tagValue === selectedCategory
           })
         }
@@ -81,7 +125,7 @@ export default function ContentPreview() {
 
   // Helper function to get primary tag for display
   const getPrimaryTag = (article) => {
-    if (!article.tags || !Array.isArray(article.tags) || article.tags.length === 0) {
+    if (!article || !article.tags || !Array.isArray(article.tags) || article.tags.length === 0) {
       return null
     }
     
@@ -90,10 +134,10 @@ export default function ContentPreview() {
     const tagValue = typeof firstTag === 'string' ? firstTag : firstTag.value
     
     // Find the tag info for styling
-    const tagInfo = availableTags.find(t => t.value === tagValue)
+    const tagInfo = (availableTags || []).find(t => (t.value || t.name) === tagValue)
     return {
       value: tagValue,
-      label: tagInfo ? tagInfo.label : tagValue,
+      label: tagInfo ? (tagInfo.label || tagInfo.name) : tagValue,
       color: tagInfo ? tagInfo.color : 'gray'
     }
   }
@@ -249,39 +293,52 @@ export default function ContentPreview() {
           {/* Enhanced Secondary Content */}
           <div className="lg:col-span-5 space-y-6">
             {/* Secondary Story with Creative Design */}
-            <article className="group cursor-pointer">
-              <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600 to-purple-700 shadow-xl shadow-blue-600/20 transform hover:scale-105 transition-all duration-500">
-                {second?.image && (
-                  <img 
-                    src={second.image} 
-                    alt={second.title} 
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-overlay" 
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-purple-900/30 to-transparent" />
-                
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    {getPrimaryTag(second) && (
-                      <span className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded-full">
-                        {getPrimaryTag(second).label}
-                      </span>
-                    )}
-                    <span className="text-blue-200 text-xs bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">{second.date}</span>
-                  </div>
-                  <h2 className="text-lg font-bold text-white leading-tight mb-2 group-hover:text-blue-100 transition-colors line-clamp-2">
-                    {second.title}
-                  </h2>
-                  {second.source && (
-                    <div className="text-purple-300 text-xs mb-2 flex items-center gap-1">
-                      <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
-                      {second.source}
-                    </div>
+            {second ? (
+              <article className="group cursor-pointer">
+                <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600 to-purple-700 shadow-xl shadow-blue-600/20 transform hover:scale-105 transition-all duration-500">
+                  {second?.image && (
+                    <img 
+                      src={second.image} 
+                      alt={second?.title || 'Secondary story'} 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-overlay" 
+                    />
                   )}
-                  <p className="text-gray-300 text-sm line-clamp-2">{second.description || second.summary}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-purple-900/30 to-transparent" />
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      {getPrimaryTag(second) && (
+                        <span className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded-full">
+                          {getPrimaryTag(second).label}
+                        </span>
+                      )}
+                      <span className="text-blue-200 text-xs bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">{second?.date || ''}</span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white leading-tight mb-2 group-hover:text-blue-100 transition-colors line-clamp-2">
+                      {second?.title || 'Untitled'}
+                    </h2>
+                    {second?.source && (
+                      <div className="text-purple-300 text-xs mb-2 flex items-center gap-1">
+                        <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
+                        {second.source}
+                      </div>
+                    )}
+                    <p className="text-gray-300 text-sm line-clamp-2">{second?.description || second?.summary || ''}</p>
+                  </div>
+                </div>
+              </article>
+            ) : (
+              // Graceful placeholder when no secondary story exists
+              <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 border border-slate-300/60 flex items-center justify-center">
+                <div className="text-center px-6">
+                  <div className="inline-flex items-center gap-2 text-slate-600 mb-2">
+                    <Eye className="w-4 h-4" />
+                    <span className="text-xs font-semibold uppercase tracking-wide">Preview</span>
+                  </div>
+                  <p className="text-slate-700 font-semibold">Add more headlines to see a secondary story here.</p>
                 </div>
               </div>
-            </article>
+            )}
 
             {/* Creative Quick Stories */}
             <div className="space-y-4">

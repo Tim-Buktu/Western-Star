@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import CMSAdmin from '../components/CMSAdmin'
 import Hero from '../sections/Hero'
 import ContentPreview from '../sections/ContentPreview'
+import ErrorBoundary from '../components/ErrorBoundary'
 import NewsletterArchive from '../sections/NewsletterArchive'
 import Topics from '../sections/Topics'
 import Testimonials from '../sections/Testimonials'
@@ -11,7 +11,20 @@ import Subscribe from '../sections/Subscribe'
 import { getCMSData } from '../utils/cms'
 
 export default function LandingPage() {
-  const siteData = getCMSData('site');
+  const [siteData, setSiteData] = useState({})
+
+  useEffect(() => {
+    const loadSiteData = async () => {
+      try {
+        const data = await getCMSData('site')
+        setSiteData(data || {})
+      } catch (error) {
+        console.error('Error loading site data:', error)
+        setSiteData({})
+      }
+    }
+    loadSiteData()
+  }, [])
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -20,13 +33,14 @@ export default function LandingPage() {
       </div>
       <Navbar />
       <Hero />
-      <ContentPreview />
+      <ErrorBoundary>
+        <ContentPreview />
+      </ErrorBoundary>
       <NewsletterArchive />
       <Topics />
       <Testimonials />
       <Subscribe />
       <Footer />
-      <CMSAdmin />
     </div>
   )
 }

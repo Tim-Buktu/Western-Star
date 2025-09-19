@@ -1,0 +1,18 @@
+{
+  "newsletters": [
+    {
+      "title": "Weekly Tech Insights #1",
+      "keyDiscussion": "AI developments and their impact on business operations",
+      "date": "2025-09-10",
+      "tags": ["TECHNOLOGY", "INNOVATION"],
+      "content": "This week we explore the latest AI developments and how they're transforming business operations across industries."
+    },
+    {
+      "title": "Weekly Tech Insights #2",
+      "keyDiscussion": "Global economic trends affecting the tech sector",
+      "date": "2025-09-09",
+      "tags": ["GLOBAL ECONOMY", "TECHNOLOGY"],
+      "content": "Analysis of current global economic trends and their specific impact on the technology sector."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# Simplified Alpine Dockerfile - fallback option
+FROM node:18-alpine
+
+# Use built-in wget (available in node:18-alpine) and avoid problematic packages
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install Node.js dependencies
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Create simple wait script instead of using netcat
+RUN echo '#!/bin/sh\necho "Waiting for database..."\nwhile ! wget -q --spider --timeout=1 postgres:5432 2>/dev/null; do sleep 1; done' > /usr/local/bin/wait-for-db.sh && chmod +x /usr/local/bin/wait-for-db.sh
+
+# Simplified startup script
+RUN echo '#!/bin/sh\necho "🚀 Starting Western Star Backend..."\n/usr/local/bin/wait-for-db.sh\necho "✅ Database is ready!"\nnpx prisma generate\nnpx prisma migrate deploy\nnpm run seed || echo "Seeding completed or skipped"\nexec npm start' > /usr/local/bin/docker-entrypoint-simple.sh && chmod +x /usr/local/bin/docker-entrypoint-simple.sh
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+EXPOSE 3001
+
+# Simple health check using built-in tools
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3001/health || exit 1
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-simple.sh"]

@@ -1,0 +1,64 @@
+# VCS
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# Env
+.env
+.env.*
+
+# Logs
+*.log
+nohup.out
+
+# Docker old files (obsolete references removed)
+# docker-compose.prod.yml
+# Dockerfile.frontend
+# Dockerfile.frontend.prod
+docker-manage.sh
+
+# Tests and scripts not needed for build
+clear_cache.js
+cms-functionality-test.js
+test-*.html
+simple-test.html
+simple-test.js
+
+# Docs (optional to exclude from build context)
+README-NEW.md
+DOCKER.md
+DOCKER_GUIDE.md
+DOCKER_TROUBLESHOOTING.md
+CMS_GUIDE.md
+CMS_INTEGRATION_COMPLETE.md
+NEWS_GUIDE.md
+NEWSROOM_GUIDE.md
+MOSAIC_DESIGN_GUIDE.md
+ROW_MANAGEMENT_GUIDE.md
+STRICT_ROW_MANAGEMENT.md
+TWO_SECTION_LAYOUT_GUIDE.md# Docker ignore for frontend
+node_modules
+npm-debug.log*
+.npm
+.nyc_output
+coverage/
+.DS_Store
+.env
+.env.local
+.env.production
+.env.staging
+dist/
+build/
+*.log
+*.pid
+*.seed
+*.pid.lock
+.coverage/
+.tmp/
+temp/
+backend/

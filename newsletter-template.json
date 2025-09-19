@@ -1,0 +1,31 @@
+{
+  "newsletters": [
+    {
+      "title": "AI Infrastructure and Market Dynamics",
+      "date": "2025-09-04",
+      "keyDiscussion": "Examining the intersection of artificial intelligence infrastructure development and emerging market dynamics. This newsletter explores how AI investments are reshaping traditional business models and creating new opportunities for growth in Southeast Asia.",
+      "tags": ["TECHNOLOGY", "INNOVATION", "GLOBAL ECONOMY"],
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop",
+      "content": "<h2>AI Infrastructure Investment Trends</h2><p>The rapid expansion of AI infrastructure across Southeast Asia presents both opportunities and challenges for businesses and policymakers alike.</p><h2>Market Impact Analysis</h2><p>Understanding how these technological shifts affect traditional market structures and create new competitive landscapes.</p>",
+      "newsletterUrl": "https://example.com/newsletter/ai-infrastructure"
+    },
+    {
+      "title": "Policy Changes in Digital Economy",
+      "date": "2025-09-03",
+      "keyDiscussion": "Recent policy developments are significantly impacting the digital economy landscape. From regulatory frameworks to international trade agreements, these changes require careful analysis and strategic adaptation.",
+      "tags": ["POLICY & REGULATIONS", "GLOBAL ECONOMY", "TECHNOLOGY"],
+      "image": "https://images.unsplash.com/photo-1611224923853-80b023f02d71?q=80&w=1200&auto=format&fit=crop",
+      "content": "<h2>Regulatory Framework Evolution</h2><p>New policy initiatives are reshaping how digital businesses operate across international markets.</p>",
+      "newsletterUrl": "https://example.com/newsletter/policy-changes"
+    },
+    {
+      "title": "Corporate Strategy in Emerging Markets",
+      "date": "2025-09-02",
+      "keyDiscussion": "Corporate strategies are evolving to address the unique challenges and opportunities present in emerging markets. This analysis covers key trends in international expansion, local partnerships, and sustainable business practices.",
+      "tags": ["CORPORATE", "INTERNATIONAL RELATIONS", "FINANCIAL"],
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop",
+      "content": "<h2>Strategic Adaptation</h2><p>Companies are developing new approaches to navigate complex emerging market environments while maintaining global operational standards.</p>",
+      "newsletterUrl": "https://example.com/newsletter/corporate-strategy"
+    }
+  ]
+}

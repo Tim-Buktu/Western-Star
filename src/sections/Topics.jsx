@@ -29,18 +29,61 @@ const categoryDescriptions = {
 };
 
 export default function Topics() {
-  const availableTags = getAvailableTags().filter(tag => tag.active);
+  const [availableTags, setAvailableTags] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
+  
+  // HOOK 1: Fetch tags on component mount
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const tags = await getAvailableTags();
+        const activeTags = Array.isArray(tags) ? tags.filter(tag => tag.active || tag.isActive) : [];
+        setAvailableTags(activeTags);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+        setAvailableTags([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchTags();
+  }, []);
 
-  // Safe checks to prevent errors
+  // HOOK 2: Handle scrolling when currentIndex changes
+  useEffect(() => {
+    if (availableTags.length > 0 && scrollRef.current) {
+      const cardWidth = 320;
+      scrollRef.current.scrollTo({
+        left: currentIndex * cardWidth,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentIndex, availableTags.length]);
+
+  // Conditional rendering AFTER all hooks have been called
+  if (loading) {
+    return (
+      <section className="relative bg-white" aria-labelledby="topics-heading">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-24">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">What We Cover</h2>
+            <p className="text-gray-600">Loading topics...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  
   if (!availableTags || availableTags.length === 0) {
     return (
       <section id="topics" className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-24">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">What We Cover</h2>
-            <p className="text-gray-600">Topics are being loaded...</p>
+            <p className="text-gray-600">No topics available at the moment.</p>
           </div>
         </div>
       </section>
@@ -60,6 +103,7 @@ export default function Topics() {
   };
 
   const scrollToIndex = (index) => {
+    const cardWidth = 320;
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         left: index * cardWidth,
@@ -67,12 +111,6 @@ export default function Topics() {
       });
     }
   };
-
-  useEffect(() => {
-    if (availableTags.length > 0) {
-      scrollToIndex(currentIndex);
-    }
-  }, [currentIndex, availableTags.length]);
 
   return (
     <section id="topics" className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-50/50">

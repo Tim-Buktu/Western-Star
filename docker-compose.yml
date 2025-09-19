@@ -1,0 +1,91 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16
+    container_name: western-star-db
+    environment:
+      POSTGRES_DB: westernstar_db
+      POSTGRES_USER: westernstar
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-westernstar123}
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U westernstar -d westernstar_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - western-star-network
+
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: western-star-backend
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://westernstar:${DB_PASSWORD:-westernstar123}@postgres:5432/westernstar_db
+      PORT: 3001
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3001/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - western-star-network
+
+  # Frontend for production: built and served via Nginx
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: western-star-frontend
+    environment:
+      - VITE_API_URL=/api
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - western-star-network
+    profiles: ["prod"]
+
+  # Frontend for development: Vite dev server with hot reload
+  frontend-dev:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=/api
+      - VITE_PROXY_TARGET=http://backend:3001
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - western-star-network
+    profiles: ["dev"]
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  western-star-network:
+    driver: bridge

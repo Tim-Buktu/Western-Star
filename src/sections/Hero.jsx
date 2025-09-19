@@ -4,11 +4,49 @@ import { getCMSData } from '../utils/cms'
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
-  const heroData = getCMSData('hero')
-  const siteData = getCMSData('site')
+  const [heroData, setHeroData] = useState({})
+  const [siteData, setSiteData] = useState({})
 
   useEffect(() => {
     setMounted(true)
+    
+    // Load hero data
+    const loadData = async () => {
+      try {
+        const [hero, site] = await Promise.all([
+          getCMSData('hero'),
+          getCMSData('site')
+        ])
+        setHeroData(hero || {})
+        setSiteData(site || {})
+      } catch (error) {
+        console.error('Error loading hero data:', error)
+        setHeroData({})
+        setSiteData({})
+      }
+    }
+    
+    loadData()
+
+    // Listen to CMS updates to keep hero/site live
+    const handleCMSUpdate = async (event) => {
+      const section = event?.detail?.section
+      if (section === 'hero' || section === 'site') {
+        try {
+          const [hero, site] = await Promise.all([
+            getCMSData('hero'),
+            getCMSData('site')
+          ])
+          setHeroData(hero || {})
+          setSiteData(site || {})
+        } catch (e) {
+          console.error('Failed to refresh hero/site after CMS update', e)
+        }
+      }
+    }
+
+    window.addEventListener('cmsDataUpdated', handleCMSUpdate)
+    return () => window.removeEventListener('cmsDataUpdated', handleCMSUpdate)
   }, [])
 
   return (

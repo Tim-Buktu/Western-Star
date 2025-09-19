@@ -1,91 +1,48 @@
 # Western Star CMS Guide
 
-## Content Management System Features
+This site’s CMS is now database-backed and integrated with the Node/Express backend (Prisma + Postgres/SQLite depending on env). You can manage News, Newsletters, Trending Topics, Testimonials, Hero, Site settings, and Tags directly from the in-app admin.
 
-Your Western Star website now includes a powerful Content Management System (CMS) that allows you to easily manage all website content without editing code.
+## Accessing the CMS
 
-### Accessing the CMS
+- Open the website locally (Vite dev server at http://localhost:5173). Click the floating pencil button in the bottom-right to open the CMS. Log in with the admin email and password configured in `CMSAdmin.jsx`.
+- Sessions last 2 hours and are stored in localStorage for convenience during development.
 
-1. **Development Mode**: Look for the red edit button (✏️) in the bottom-right corner of your website
-2. **Click the button** to open the CMS admin panel
+## What’s Managed
 
-### CMS Sections
+- Site settings and Hero (title, subtitle, badge)
+- News Articles: full CRUD, reorder (position), toggle visibility, choose showcase section (featured/mosaic/loop), tags, author, image, content
+- Newsletters: CRUD with tags, content, URL
+- Trending Topics: CRUD with category/title/summary/date/image/visibility, position ordering
+- Testimonials, Topics, Tags, Navigation, Footer (read-only or CRUD as applicable)
 
-#### 1. Site Settings
+## Data flow and caching
 
-- **Site Title**: Change the main website title
-- **Top Banner**: Edit the announcement banner at the top of the page
+- Frontend uses `src/utils/cmsApi.js` and `src/utils/api.js` to call backend REST endpoints under `/api`.
+- Responses are cached in-memory for ~60s. Any mutation clears the relevant cache so changes appear after save. If you don’t see changes immediately, wait a second and refresh.
 
-#### 2. Hero Section
+## Authors
 
-- **Title**: Main headline on the homepage
-- **Subtitle**: Description text below the title
-- **Badge**: The "Daily or every 2 days" badge (can be toggled on/off)
+- Authors are managed via the backend (`/api/authors`). In the News Article modal, select an author from the dropdown. The selected authorId is saved with the article.
 
-#### 3. Trending Topics
+## Tags
 
-- **Section Title**: Change "Recent insights" to any title you want
-- **Visibility Toggle**: Show/hide the entire section
-- **Add Topics**: Create new trending topic cards
-- **Edit Topics**: Modify existing topic cards
-- **Delete Topics**: Remove unwanted topics
+- Tags must exist in the database to be associated. The backend now safely ignores unknown tag names on create/update rather than failing.
 
-### Managing Trending Topics
+## JSON Import (Newsletters)
 
-#### Adding a New Topic
+- Use the JSON import in CMS > Newsletters to bulk add newsletters. The input can be an array or an object with a `newsletters` array. On success, you’ll see a confirmation and the list will refresh.
 
-1. Go to the "Trending Topics" tab
-2. Click "Add Topic" button
-3. Fill in:
-   - **Category**: Topic category (e.g., "APPS", "ENTERPRISE")
-   - **Title**: The main headline
-   - **Date**: Publication date
-   - **Image URL**: Link to the topic image
-   - **Featured**: Mark as featured (optional)
+## Troubleshooting
 
-#### Editing Existing Topics
+- If you previously used localStorage content, the app will force database mode. Clear `localStorage.westernStarCMS` only if needed. Use the “Reset CMS data” action to clear caches.
+- If a UI section shows no items, verify the backend service is running and reachable at `VITE_API_URL` (or proxied to :3001 in dev). See `vite.config.js`.
+- If you see tag-related filter errors, ensure your tags exist via `/api/tags` and are active. The UI now guards against missing arrays and undefined fields.
 
-1. Click the edit icon (✏️) next to any topic
-2. Modify the fields as needed
-3. Click "Save"
+## Development
 
-#### Making Topics Less Conspicuous
+- Dev: run both servers (backend and frontend). The project includes `npm run dev` for frontend and `npm run backend:dev` for backend. Or run `npm run dev:all`.
+- Build: `npm run build` creates a production bundle in `dist/`.
 
-The trending topics section has been redesigned to be more subtle:
+## Security note
 
-- **Smaller images** (reduced from h-56 to h-40)
-- **Darker background** (changed to #0a0a0a)
-- **Reduced opacity** on images (60% instead of 90%)
-- **Smaller text** and spacing
-- **Subtle borders** and hover effects
-
-You can also:
-
-- **Hide the section entirely** using the visibility toggle
-- **Change the section title** to something less prominent
-- **Remove individual topics** that are too attention-grabbing
-
-### Data Storage
-
-- Content is stored in your browser's localStorage during development
-- Changes persist between browser sessions
-- For production, you would connect this to a real database
-
-### Customization Tips
-
-1. **Less Conspicuous Topics**: Use the visibility toggle or change the section title to "Recent Updates" or similar
-2. **Image Selection**: Choose more subtle, professional images
-3. **Category Names**: Use lowercase or more understated category names
-4. **Content Strategy**: Focus on fewer, higher-quality topics
-
-### Next Steps for Production
-
-To make this production-ready, you would need to:
-
-1. Connect to a database (PostgreSQL, MongoDB, etc.)
-2. Add user authentication for admin access
-3. Implement image upload functionality
-4. Add content validation and sanitization
-5. Create backup and version control for content
-
-The CMS is designed to be user-friendly while giving you full control over your website's content presentation.
+- The current login is client-side only and intended for development. For production, integrate proper authentication/authorization on the backend and lock down write endpoints.

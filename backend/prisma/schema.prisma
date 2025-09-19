@@ -1,0 +1,213 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Site {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  topBanner   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  color     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  newsArticles NewsArticle[]
+  newsletters  Newsletter[]
+
+  @@map("tags")
+}
+
+model Hero {
+  id          Int      @id @default(autoincrement())
+  badgeText   String
+  badgeActive Boolean  @default(true)
+  title       String
+  subtitle    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TrendingTopic {
+  id        Int      @id @default(autoincrement())
+  category  String
+  title     String
+  summary   String
+  date      DateTime
+  image     String
+  position  Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("trending_topics")
+}
+
+model Topic {
+  id          Int      @id @default(autoincrement())
+  icon        String
+  title       String
+  description String
+  isActive    Boolean  @default(true)
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("topics")
+}
+
+model NavigationItem {
+  id        Int      @id @default(autoincrement())
+  label     String
+  href      String
+  isVisible Boolean  @default(true)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("navigation_items")
+}
+
+model Author {
+  id          Int           @id @default(autoincrement())
+  name        String
+  role        String
+  avatar      String?
+  bio         String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  NewsArticle NewsArticle[]
+
+  @@map("authors")
+}
+
+model NewsArticle {
+  id              Int      @id @default(autoincrement())
+  type            String   @default("standard")
+  category        String
+  title           String
+  summary         String
+  content         String   @db.Text
+  showcaseSection String   @default("none") // 'featured', 'mosaic', 'loop', 'none'
+  isVisible       Boolean  @default(true)
+  position        Int      @default(0)
+  date            DateTime @default(now())
+  // Optional display-only date label (e.g., "September 2025"). Doesn't affect sorting.
+  displayDate     String?
+  lastUpdated     DateTime @updatedAt
+  views           Int      @default(0)
+  imageUrl        String?
+  imageAlt        String?
+  authorId        Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  author    Author                @relation(fields: [authorId], references: [id])
+  tags      Tag[]
+  insights  NewsArticleInsight[]
+  resources NewsArticleResource[]
+
+  @@map("news_articles")
+}
+
+model NewsArticleInsight {
+  id            Int      @id @default(autoincrement())
+  newsArticleId Int
+  content       String
+  position      Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  newsArticle NewsArticle @relation(fields: [newsArticleId], references: [id], onDelete: Cascade)
+
+  @@map("news_article_insights")
+}
+
+model NewsArticleResource {
+  id            Int      @id @default(autoincrement())
+  newsArticleId Int
+  title         String
+  description   String?
+  url           String
+  type          String   @default("link") // 'report', 'video', 'link', etc.
+  position      Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  newsArticle NewsArticle @relation(fields: [newsArticleId], references: [id], onDelete: Cascade)
+
+  @@map("news_article_resources")
+}
+
+model Newsletter {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  // Optional display-only date label (e.g., "Sept 19, 2025"). Doesn't affect sorting.
+  displayDate   String?
+  title         String
+  keyDiscussion String   @db.Text
+  content       String?  @db.Text
+  newsletterUrl String?
+  imageUrl      String?
+  views         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  tags Tag[]
+
+  @@map("newsletters")
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  title     String
+  text      String
+  isActive  Boolean  @default(true)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+model FooterLink {
+  id        Int      @id @default(autoincrement())
+  label     String
+  href      String
+  isVisible Boolean  @default(true)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("footer_links")
+}
+
+model Footer {
+  id        Int      @id @default(autoincrement())
+  copyright String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("footer_config")
+}
