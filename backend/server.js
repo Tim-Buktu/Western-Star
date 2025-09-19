@@ -37,8 +37,15 @@ const PORT = process.env.PORT || 3001
 app.use(helmet())
 
 // CORS configuration
+// Allow a primary FRONTEND_URL and optional comma-separated FRONTEND_URLS for multiple domains (e.g., Vercel prod + previews)
+const extraOrigins = (process.env.FRONTEND_URLS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  ...extraOrigins,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:4173', // vite preview
@@ -49,11 +56,24 @@ const allowedOrigins = [
   'http://127.0.0.1:8080',
 ].filter(Boolean)
 
+const allowVercelPreviews = (process.env.ALLOW_VERCEL_PREVIEWS || 'false').toLowerCase() === 'true'
+
 app.use(cors({
   origin: (origin, callback) => {
     // Allow no-origin (like curl or mobile apps) and allowed origins
     if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true)
+    }
+    // Optionally allow any Vercel preview deployments (*.vercel.app)
+    if (allowVercelPreviews) {
+      try {
+        const host = new URL(origin).host
+        if (host && host.endsWith('.vercel.app')) {
+          return callback(null, true)
+        }
+      } catch (_) {
+        // ignore parse error and fall through
+      }
     }
     return callback(new Error('Not allowed by CORS'))
   },
@@ -106,8 +126,17 @@ app.use('/api/authors', authorRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/migration', migrationRoutes)
 
-// Health check endpoint
+// Health check endpoints
 app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  })
+})
+
+// Match Vercel convention where backend is accessed via /api/*
+app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
@@ -138,9 +167,13 @@ app.use('*', (req, res) => {
   })
 })
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-  console.log(`📊 Environment: ${process.env.NODE_ENV}`)
-  console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`)
-})
+// Export app for serverless (Vercel) and start server locally when not on Vercel
+export default app
+
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`)
+    console.log(`📊 Environment: ${process.env.NODE_ENV}`)
+    console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`)
+  })
+}

@@ -12,7 +12,8 @@
     "generate": "prisma generate",
     "studio": "prisma studio",
     "seed": "node scripts/seed.js",
-    "verify:db": "node scripts/verify-db.js"
+    "verify:db": "node scripts/verify-db.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
@@ -24,10 +25,14 @@
     "express-validator": "^7.0.1",
     "multer": "^1.4.5-lts.1",
     "compression": "^1.7.4",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0",
     "prisma": "^5.15.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

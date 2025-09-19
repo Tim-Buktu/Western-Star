@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Edit2, Save, X, Plus, Trash2, Eye, EyeOff, GripVertical, Lock, User, Shield, Newspaper } from 'lucide-react';
+import { Edit2, Save, X, Plus, Trash2, Eye, EyeOff, GripVertical, Lock, User, Shield, Newspaper, FileText } from 'lucide-react';
 import { 
   getCMSData, 
   updateCMSData,
