@@ -80,6 +80,9 @@ app.use(cors({
   credentials: true,
 }))
 
+// Be explicit for API preflight in serverless environments
+app.options('/api/*', cors(), (req, res) => res.sendStatus(204))
+
 // Handle preflight
 app.options('*', cors())
 

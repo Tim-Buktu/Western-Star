@@ -15,16 +15,27 @@ class ApiClient {
     } else {
       url = this.baseURL.replace(/\/+$/, '') + '/' + endpoint.replace(/^\/+/, '')
     }
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
+    const method = (options.method || 'GET').toUpperCase()
+    const headers = { ...(options.headers || {}) }
+
+    // Only set Content-Type for requests that send a JSON body.
+    // Do NOT set it on GET/HEAD to avoid triggering CORS preflight unnecessarily.
+    const hasBody = options.body !== undefined && options.body !== null
+    const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData
+    if (hasBody && !isFormData && !headers['Content-Type'] && method !== 'GET' && method !== 'HEAD') {
+      headers['Content-Type'] = 'application/json'
     }
 
-    if (config.body && typeof config.body === 'object') {
-      config.body = JSON.stringify(config.body)
+    const config = {
+      ...options,
+      method,
+      headers,
+      mode: 'cors',
+    }
+
+    // Stringify plain-object bodies when sending JSON
+    if (hasBody && !isFormData && typeof options.body === 'object' && (method !== 'GET' && method !== 'HEAD')) {
+      config.body = JSON.stringify(options.body)
     }
 
     try {
