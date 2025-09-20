@@ -43,8 +43,10 @@ const extraOrigins = (process.env.FRONTEND_URLS || '')
   .map((s) => s.trim())
   .filter(Boolean)
 
+const primaryOrigin = (process.env.FRONTEND_URL || '').trim()
+
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  primaryOrigin,
   ...extraOrigins,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
@@ -58,7 +60,7 @@ const allowedOrigins = [
 
 const allowVercelPreviews = (process.env.ALLOW_VERCEL_PREVIEWS || 'false').toLowerCase() === 'true'
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     // Allow no-origin (like curl or mobile apps) and allowed origins
     if (!origin || allowedOrigins.includes(origin)) {
@@ -78,13 +80,14 @@ app.use(cors({
     return callback(new Error('Not allowed by CORS'))
   },
   credentials: true,
-}))
+}
 
-// Be explicit for API preflight in serverless environments
-app.options('/api/*', cors(), (req, res) => res.sendStatus(204))
+const corsMiddleware = cors(corsOptions)
+app.use(corsMiddleware)
 
-// Handle preflight
-app.options('*', cors())
+// Ensure preflight uses the same CORS policy (important for serverless)
+app.options('/api/*', corsMiddleware)
+app.options('*', corsMiddleware)
 
 // Rate limiting
 if (process.env.NODE_ENV !== 'development') {
